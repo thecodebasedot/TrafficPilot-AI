@@ -22,6 +22,19 @@
   </header>
 
   <main id="app">
+    <!-- Real website audit -->
+    <section class="card audit-card">
+      <h2>Analyze a Real Website</h2>
+      <p class="muted audit-help">Enter a live URL — TrafficPilot crawls the page and runs real on-page,
+        technical, keyword and geo/region SEO analysis.</p>
+      <form id="auditForm" class="audit-form">
+        <input id="auditUrl" type="text" placeholder="https://your-website.com" autocomplete="off" />
+        <input id="auditCountry" type="text" class="country" placeholder="Target country (e.g. BD)" autocomplete="off" />
+        <button type="submit">Analyze</button>
+      </form>
+      <div id="auditResult" class="audit-result" hidden></div>
+    </section>
+
     <div id="loading" class="loading">Loading analytics…</div>
 
     <section id="content" hidden>

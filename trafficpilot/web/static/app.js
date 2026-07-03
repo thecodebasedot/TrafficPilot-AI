@@ -203,6 +203,76 @@
     }
   }
 
+  // ---------------- real website audit ---------------- //
+  function chip(ok, label) {
+    return `<span class="chip ${ok ? "good" : "bad"}">${ok ? "✓" : "✕"} ${label}</span>`;
+  }
+
+  function renderAudit(a) {
+    const box = $("auditResult");
+    box.hidden = false;
+    if (!a.ok) {
+      box.innerHTML = `<div class="audit-err">Could not analyze <b>${a.url}</b>: ${a.error || "unknown error"}</div>`;
+      return;
+    }
+    const s = a.seo_score, op = a.onpage, ix = a.index_status, g = a.geo;
+    const kw = (a.keywords.bigrams || []).slice(0, 8).map((b) => `<span class="chip">${b.term}</span>`).join("");
+    const recs = a.recommendations
+      .map((r) => `<div class="rec ${r.priority}"><div class="rtop"><span class="rtitle">${r.title}</span>` +
+        `<span class="pill ${r.priority}">${r.priority}</span></div><div class="rcat">${r.category}</div>` +
+        `<div class="rdetail">${r.detail}</div><div class="rimpact">↗ ${r.expected_impact}</div></div>`)
+      .join("");
+    box.innerHTML =
+      `<div class="audit-summary">` +
+        `<div class="audit-grade">${s.grade}</div>` +
+        `<div class="ameta"><b>${a.url}</b><br>` +
+        `SEO score <b>${s.overall}/100</b> · response ${a.fetch_info.response_time_s}s · ` +
+        `${op.word_count} words · index: <b>${ix.status}</b></div>` +
+      `</div>` +
+      `<div class="chips">` +
+        chip(op.title_ok, "title") + chip(op.description_ok, "meta desc") +
+        chip(op.h1_count === 1, "single H1") + chip(op.mobile_friendly, "mobile") +
+        chip(op.https, "https") + chip(op.has_structured_data, "schema") +
+        chip(op.has_canonical, "canonical") + chip(ix.sitemap_present, "sitemap") +
+      `</div>` +
+      `<div class="chips"><span class="muted">Geo readiness ${g.readiness_score}% —</span>` +
+        chip(g.signals.html_lang, "lang") + chip(g.signals.hreflang, "hreflang") +
+        chip(g.signals.local_business_schema, "local schema") +
+      `</div>` +
+      (kw ? `<h2 style="margin-top:16px">Keywords this page targets</h2><div class="chips">${kw}</div>` : "") +
+      `<h2 style="margin-top:16px">Recommendations (${a.recommendations.length})</h2><div class="recs">${recs}</div>` +
+      (a.notes.length ? `<div class="audit-note">${a.notes.map((n) => "• " + n).join("<br>")}</div>` : "");
+    box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function initAuditForm() {
+    const form = $("auditForm");
+    if (!form) return;
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const url = $("auditUrl").value.trim();
+      if (!url) return;
+      const country = $("auditCountry").value.trim();
+      const btn = form.querySelector("button");
+      btn.disabled = true;
+      btn.textContent = "Analyzing…";
+      $("auditResult").hidden = false;
+      $("auditResult").innerHTML = `<div class="muted">Crawling ${url} …</div>`;
+      try {
+        const q = new URLSearchParams({ url });
+        if (country) q.set("country", country);
+        const res = await fetch("/api/audit?" + q.toString());
+        renderAudit(await res.json());
+      } catch (err) {
+        $("auditResult").innerHTML = `<div class="audit-err">Request failed: ${err.message}</div>`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Analyze";
+      }
+    });
+  }
+
+  window.addEventListener("DOMContentLoaded", initAuditForm);
   window.addEventListener("DOMContentLoaded", load);
   window.addEventListener("resize", () => {
     // re-fetch is cheap here; simply reload data to redraw at new size

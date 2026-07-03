@@ -5,5 +5,9 @@ xgboost>=2.0
 joblib>=1.3
 Flask>=3.0
 
+# real-website audit (crawl + parse live URLs)
+requests>=2.31
+beautifulsoup4>=4.12
+
 # dev / testing (optional)
 pytest>=7.0

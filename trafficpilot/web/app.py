@@ -14,7 +14,7 @@ GET  /api/health           -> liveness probe
 
 from __future__ import annotations
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 
 from trafficpilot.service import TrafficPilotService
 
@@ -37,6 +37,14 @@ def create_app() -> Flask:
     @app.route("/api/recommendations")
     def api_recommendations():
         return jsonify(app.config["SERVICE"].recommendations())
+
+    @app.route("/api/audit")
+    def api_audit():
+        url = (request.args.get("url") or "").strip()
+        if not url:
+            return jsonify({"ok": False, "error": "Provide a ?url= parameter."}), 400
+        country = (request.args.get("country") or "").strip() or None
+        return jsonify(app.config["SERVICE"].audit(url, target_country=country))
 
     @app.route("/api/health")
     def api_health():

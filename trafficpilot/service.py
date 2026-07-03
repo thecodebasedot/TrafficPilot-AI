@@ -18,6 +18,7 @@ from trafficpilot.analysis import (
     keyword_opportunities,
     seo_score_breakdown,
 )
+from trafficpilot.audit import audit_site
 from trafficpilot.config import ARTIFACTS_DIR
 from trafficpilot.data import (
     generate_competitors,
@@ -151,6 +152,11 @@ class TrafficPilotService:
             "importance_r2": self.analyzer.r2,
             "segmenter_silhouette": self.segmenter.silhouette,
         }
+
+    # ------------------------------------------------------------------ #
+    def audit(self, url: str, target_country: str | None = None) -> dict:
+        """Run a real-website audit for ``url`` and return it as a dict."""
+        return audit_site(url, target_country=target_country).as_dict()
 
     # ------------------------------------------------------------------ #
     def dashboard(self) -> dict:

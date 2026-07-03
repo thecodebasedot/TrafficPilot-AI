@@ -179,3 +179,41 @@ canvas { width: 100%; }
 .rec .rcat { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
 
 .footer { margin-top: 8px; color: var(--muted); font-size: 12px; text-align: center; }
+
+/* --- real website audit --- */
+.audit-card { border-color: var(--brand); }
+.audit-help { margin: -6px 0 14px; }
+.audit-form { display: flex; gap: 10px; flex-wrap: wrap; }
+.audit-form input {
+  flex: 1; min-width: 220px;
+  background: var(--panel-2); border: 1px solid var(--border); color: var(--text);
+  padding: 11px 14px; border-radius: 10px; font-size: 14px;
+}
+.audit-form input.country { flex: 0 0 200px; min-width: 140px; }
+.audit-form input:focus { outline: none; border-color: var(--brand); }
+.audit-form button {
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  color: #06121f; border: 0; font-weight: 700; padding: 11px 22px;
+  border-radius: 10px; cursor: pointer; font-size: 14px;
+}
+.audit-form button:disabled { opacity: 0.6; cursor: progress; }
+.audit-result { margin-top: 18px; }
+.audit-result .arow { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 16px; }
+.audit-summary {
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  background: var(--panel-2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 18px; margin-bottom: 16px;
+}
+.audit-grade {
+  width: 64px; height: 64px; border-radius: 14px; display: grid; place-items: center;
+  font-size: 30px; font-weight: 800; color: #06121f;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+}
+.audit-summary .ameta b { color: var(--text); }
+.audit-summary .ameta { color: var(--muted); font-size: 13px; line-height: 1.6; }
+.audit-note { color: var(--muted); font-size: 12px; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 4px; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0 4px; }
+.chip { font-size: 12px; padding: 4px 10px; border-radius: 999px; background: var(--panel-2); border: 1px solid var(--border); color: var(--muted); }
+.chip.good { color: var(--brand-2); border-color: rgba(34,211,166,0.4); }
+.chip.bad { color: var(--danger); border-color: rgba(255,92,92,0.4); }
+.audit-err { color: var(--danger); background: rgba(255,92,92,0.08); border: 1px solid rgba(255,92,92,0.3); padding: 12px 14px; border-radius: 10px; }

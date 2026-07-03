@@ -14,6 +14,48 @@ keywords to target.
 
 ---
 
+## Analyze a real website 🌐
+
+Give TrafficPilot a **live URL** and it crawls the page and runs a real audit —
+no synthetic data:
+
+```bash
+python scripts/audit_site.py https://your-website.com --country BD
+```
+
+…or use the **“Analyze a Real Website”** box at the top of the dashboard.
+
+![real website audit](docs/audit.png)
+
+It measures the concrete signals search engines actually use and returns a
+prioritised, white-hat action plan:
+
+- **On-page SEO** — title, meta description, headings, word count, image alt,
+  internal/external links, canonical
+- **Technical SEO** — HTTPS, mobile viewport, structured data (JSON-LD),
+  Open Graph, `robots.txt`, `sitemap.xml`, `noindex` detection
+- **Index status** — is the page set up to be indexed, and what's blocking it
+- **Keywords** — what the page currently targets (unigrams + bigrams)
+- **Geo / region readiness** — `lang`, `hreflang`, `LocalBusiness` schema →
+  country/area targeting recommendations
+- **Legitimate indexing helpers** — generate a `sitemap.xml` and submit URLs via
+  **IndexNow** (`trafficpilot/audit/indexing.py`)
+
+### ⚠️ An honest note on “automatic ranking”
+
+No software can *force* Google to rank a site — Google's ranking is earned, not
+set from outside. Tools promising “auto-ranking” or fake-traffic ranking use
+**black-hat** techniques that get sites **penalised or de-indexed**. TrafficPilot
+only prescribes the **white-hat** path (technical fixes, better content, correct
+geo-targeting, local SEO, legitimate indexing) — the approach that sustainably
+grows organic traffic and sales.
+
+Signals that need a paid third-party API (domain authority, backlink counts,
+exact SERP position) are reported as *“needs external API”* rather than
+fabricated.
+
+---
+
 ## Machine learning at the core
 
 | Algorithm         | Used for                                                        |
@@ -57,10 +99,18 @@ trafficpilot/
 ├── analysis/
 │   ├── seo.py             # SEO score, index status, keywords, competitors
 │   └── recommendations.py # AI recommendation engine
+├── audit/                 # REAL website crawl + analysis
+│   ├── fetch.py           # fetch URL / robots.txt / sitemap.xml
+│   ├── onpage.py          # parse on-page & technical SEO signals
+│   ├── keywords.py        # keyword extraction from page text
+│   ├── geo.py             # geo/region readiness + local-SEO recs
+│   ├── indexing.py        # sitemap generation + IndexNow submission
+│   └── audit.py           # orchestrator -> SiteAudit
 ├── service.py             # assembles the full dashboard payload
 ├── train.py               # trains + saves every model
 └── web/                   # Flask dashboard (app + templates + static)
 scripts/run_demo.py        # end-to-end text demo (no web server)
+scripts/audit_site.py      # CLI: audit a real URL
 tests/                     # pytest suite
 ```
 
@@ -99,6 +149,7 @@ saved artifacts are found.
 | ----------------------- | ---------------------------------- |
 | `GET /`                 | Dashboard (HTML)                   |
 | `GET /api/dashboard`    | Full analytics payload (JSON)      |
+| `GET /api/audit?url=…&country=…` | **Real-website audit** (JSON) |
 | `GET /api/recommendations` | Recommendations only (JSON)     |
 | `GET /api/health`       | Liveness probe                     |
 
@@ -132,8 +183,9 @@ python -m pytest tests/ -q
 
 ## Tech stack
 
-Python · XGBoost · scikit-learn · pandas / NumPy · Flask · vanilla-JS canvas
-charts (no front-end build step, no external CDN).
+Python · XGBoost · scikit-learn · pandas / NumPy · Flask · requests +
+BeautifulSoup (real-URL crawling) · vanilla-JS canvas charts (no front-end
+build step, no external CDN).
 
 ## License
 

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TrafficPilot AI — SEO &amp; Growth Analytics</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">✈</span>
+      <div>
+        <h1>TrafficPilot <span>AI</span></h1>
+        <p class="tagline">AI-powered SEO &amp; Growth Analytics</p>
+      </div>
+    </div>
+    <div class="live">
+      <span class="pulse"></span>
+      <span id="live-visitors">—</span> live visitors
+    </div>
+  </header>
+
+  <main id="app">
+    <div id="loading" class="loading">Loading analytics…</div>
+
+    <section id="content" hidden>
+      <!-- KPI cards -->
+      <div class="kpi-grid" id="kpi-grid"></div>
+
+      <!-- charts -->
+      <div class="grid-2">
+        <div class="card">
+          <h2>Traffic by Channel</h2>
+          <canvas id="trafficChart" height="240"></canvas>
+          <div class="legend" id="trafficLegend"></div>
+        </div>
+        <div class="card">
+          <h2>Sales Forecast <span class="muted">(14-day)</span></h2>
+          <canvas id="salesChart" height="240"></canvas>
+          <div class="legend" id="salesLegend"></div>
+        </div>
+      </div>
+
+      <!-- SEO + drivers -->
+      <div class="grid-2">
+        <div class="card">
+          <h2>SEO Score</h2>
+          <div class="seo-wrap">
+            <canvas id="seoGauge" width="180" height="180"></canvas>
+            <div id="seoComponents" class="seo-components"></div>
+          </div>
+          <div id="indexStatus" class="index-status"></div>
+        </div>
+        <div class="card">
+          <h2>Top Growth Drivers <span class="muted">(Random Forest)</span></h2>
+          <div id="drivers" class="bars"></div>
+        </div>
+      </div>
+
+      <!-- segments -->
+      <div class="card">
+        <h2>Visitor Segments <span class="muted">(K-Means)</span></h2>
+        <div id="segments" class="segment-grid"></div>
+      </div>
+
+      <!-- keywords + competitors -->
+      <div class="grid-2">
+        <div class="card">
+          <h2>Keyword Opportunities</h2>
+          <table class="tbl" id="keywordTable"></table>
+        </div>
+        <div class="card">
+          <h2>Competitor Comparison</h2>
+          <table class="tbl" id="competitorTable"></table>
+        </div>
+      </div>
+
+      <!-- recommendations -->
+      <div class="card">
+        <h2>AI Recommendations</h2>
+        <div id="recommendations" class="recs"></div>
+      </div>
+
+      <footer class="footer">
+        <span id="modelMeta"></span>
+      </footer>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='charts.js') }}"></script>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

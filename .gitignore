@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# TrafficPilot AI generated outputs
+artifacts/
+data_store/

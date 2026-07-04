@@ -56,6 +56,11 @@ def fetch(url: str, timeout: int = DEFAULT_TIMEOUT) -> FetchResult:
         )
         elapsed = time.time() - t0
         ctype = resp.headers.get("Content-Type", "")
+        # requests defaults to ISO-8859-1 when the header omits a charset, which
+        # mangles the many UTF-8 pages that declare their charset only in a
+        # <meta> tag. Fall back to content-sniffed encoding in that case.
+        if "charset" not in ctype.lower():
+            resp.encoding = resp.apparent_encoding or "utf-8"
         html = resp.text if "html" in ctype or not ctype else ""
         return FetchResult(
             url=url,

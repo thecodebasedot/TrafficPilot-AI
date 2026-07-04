@@ -81,6 +81,19 @@ def analyze_html(html: str, final_url: str, headers: dict | None = None) -> dict
         m.get("property"): m.get("content")
         for m in soup.find_all("meta", property=re.compile("^og:", re.I))
     }
+    twitter_tags = {
+        m.get("name"): m.get("content")
+        for m in soup.find_all("meta", attrs={"name": re.compile("^twitter:", re.I)})
+    }
+
+    # links out to social platforms (share/follow presence)
+    social_hosts = ("facebook.com", "twitter.com", "x.com", "instagram.com",
+                    "linkedin.com", "youtube.com", "pinterest.com", "wa.me",
+                    "whatsapp.com", "t.me", "tiktok.com")
+    social_links = sorted({
+        h for a in soup.find_all("a", href=True)
+        for h in social_hosts if h in a["href"].lower()
+    })
 
     # --- structured data (JSON-LD) ------------------------------------ #
     schema_types = []
@@ -120,6 +133,9 @@ def analyze_html(html: str, final_url: str, headers: dict | None = None) -> dict
         "noindex": noindex,
         "https": urlparse(final_url).scheme == "https",
         "open_graph": bool(og_tags),
+        "has_og_image": "og:image" in og_tags,
+        "has_twitter_card": bool(twitter_tags),
+        "social_links": social_links,
         "schema_types": sorted(set(schema_types)),
         "has_structured_data": bool(schema_types),
         "is_https": urlparse(final_url).scheme == "https",

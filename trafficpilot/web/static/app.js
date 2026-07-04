@@ -240,10 +240,60 @@
         chip(g.signals.local_business_schema, "local schema") +
       `</div>` +
       (kw ? `<h2 style="margin-top:16px">Keywords this page targets</h2><div class="chips">${kw}</div>` : "") +
+      renderGrowth(a.growth) +
       `<h2 style="margin-top:16px">Recommendations (${a.recommendations.length})</h2><div class="recs">${recs}</div>` +
       (a.notes.length ? `<div class="audit-note">${a.notes.map((n) => "• " + n).join("<br>")}</div>` : "");
     box.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
+
+  function renderGrowth(g) {
+    if (!g || !g.virality) return "";
+    const v = g.virality;
+    const comp = v.components;
+    const bars = Object.keys(comp)
+      .map((k) => `<div class="seo-row"><span class="name">${k.replace(/_/g, " ")}</span>` +
+        `<span class="track"><span class="fill" style="width:${comp[k]}%"></span></span><span>${comp[k]}</span></div>`)
+      .join("");
+    const posts = g.social_kit.posts;
+    const postBlocks = Object.keys(posts)
+      .map((p) => `<div class="post"><div class="post-h">${p}` +
+        `<button class="copy" data-copy="${encodeURIComponent(posts[p])}">copy</button></div>` +
+        `<pre>${escapeHtml(posts[p])}</pre></div>`)
+      .join("");
+    const plan = g.distribution_plan
+      .map((s) => `<div class="rec ${s.priority}"><div class="rtop"><span class="rtitle">${s.action}</span>` +
+        `<span class="pill ${s.priority}">${s.priority}</span></div><div class="rcat">${s.channel}</div>` +
+        `<div class="rdetail">${s.detail}</div></div>`)
+      .join("");
+    const label = v.label.toUpperCase();
+    return (
+      `<h2 style="margin-top:20px">Growth &amp; Virality — <span class="pill ${cap(v.label)}">${label}</span> ${v.score}/100</h2>` +
+      `<div class="seo-components" style="margin:6px 0 14px">${bars}</div>` +
+      `<h2 style="margin-top:8px">Ready-to-post social content</h2>` +
+      `<div class="posts">${postBlocks}</div>` +
+      `<h2 style="margin-top:16px">Open Graph tags <span class="muted">(paste into &lt;head&gt;)</span> ` +
+      `<button class="copy" data-copy="${encodeURIComponent(g.open_graph_tags)}">copy</button></h2>` +
+      `<pre class="og">${escapeHtml(g.open_graph_tags)}</pre>` +
+      `<h2 style="margin-top:16px">Organic distribution playbook</h2><div class="recs">${plan}</div>`
+    );
+  }
+
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  // delegated copy-to-clipboard
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".copy");
+    if (!btn) return;
+    e.preventDefault();
+    navigator.clipboard.writeText(decodeURIComponent(btn.dataset.copy)).then(() => {
+      const t = btn.textContent;
+      btn.textContent = "copied ✓";
+      setTimeout(() => (btn.textContent = t), 1200);
+    });
+  });
 
   function initAuditForm() {
     const form = $("auditForm");

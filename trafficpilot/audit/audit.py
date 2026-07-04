@@ -24,6 +24,7 @@ from trafficpilot.audit.geo import assess_geo
 from trafficpilot.audit.keywords import extract_keywords
 from trafficpilot.audit.onpage import analyze_html
 from trafficpilot.config import GOOD_PAGE_SPEED
+from trafficpilot.growth import growth_report
 
 
 # --------------------------------------------------------------------------- #
@@ -168,6 +169,7 @@ class SiteAudit:
     index_status: dict = field(default_factory=dict)
     keywords: dict = field(default_factory=dict)
     geo: dict = field(default_factory=dict)
+    growth: dict = field(default_factory=dict)
     recommendations: list = field(default_factory=list)
     notes: list = field(default_factory=list)
 
@@ -176,7 +178,7 @@ class SiteAudit:
             "url": self.url, "ok": self.ok, "error": self.error,
             "fetch_info": self.fetch_info, "onpage": self.onpage,
             "seo_score": self.seo_score, "index_status": self.index_status,
-            "keywords": self.keywords, "geo": self.geo,
+            "keywords": self.keywords, "geo": self.geo, "growth": self.growth,
             "recommendations": self.recommendations, "notes": self.notes,
         }
 
@@ -199,6 +201,7 @@ def audit_site(url: str, target_country: str | None = None) -> SiteAudit:
     idx = index_status(onpage, robots, sitemap)
     kw = extract_keywords(res.html)
     geo = assess_geo(onpage, target_country)
+    growth = growth_report(onpage, kw, res.final_url)
     recs = build_recommendations(onpage, seo, idx, geo)
 
     notes = [
@@ -215,5 +218,5 @@ def audit_site(url: str, target_country: str | None = None) -> SiteAudit:
             "response_time_s": res.elapsed, "https": onpage["https"],
         },
         onpage=onpage, seo_score=seo, index_status=idx,
-        keywords=kw, geo=geo, recommendations=recs, notes=notes,
+        keywords=kw, geo=geo, growth=growth, recommendations=recs, notes=notes,
     )

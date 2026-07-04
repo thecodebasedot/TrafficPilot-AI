@@ -60,6 +60,20 @@ def main() -> None:
     print("-" * 60)
     print("  " + ", ".join(b["term"] for b in a.keywords["bigrams"][:8]))
 
+    g = a.growth
+    if g:
+        v = g["virality"]
+        print(f"\nGrowth & Virality: {v['score']}/100 ({v['label']})")
+        print("-" * 60)
+        for name, val in v["components"].items():
+            print(f"  {name.replace('_', ' '):20s} {val}")
+        print("\n  Suggested hashtags: " + " ".join(g["social_kit"]["hashtags"]))
+        print("\n  Ready-to-post (X / Twitter):")
+        print("    " + g["social_kit"]["posts"]["x"])
+        print("\n  Organic distribution playbook:")
+        for s in g["distribution_plan"]:
+            print(f"    [{s['priority']}] {s['action']} ({s['channel']})")
+
     print(f"\nRecommendations ({len(a.recommendations)})")
     print("-" * 60)
     for i, r in enumerate(a.recommendations, 1):

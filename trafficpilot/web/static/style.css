@@ -217,3 +217,19 @@ canvas { width: 100%; }
 .chip.good { color: var(--brand-2); border-color: rgba(34,211,166,0.4); }
 .chip.bad { color: var(--danger); border-color: rgba(255,92,92,0.4); }
 .audit-err { color: var(--danger); background: rgba(255,92,92,0.08); border: 1px solid rgba(255,92,92,0.3); padding: 12px 14px; border-radius: 10px; }
+
+/* growth / virality */
+.posts { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.post { background: var(--panel-2); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.post-h { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px;
+  font-size: 12px; text-transform: capitalize; color: var(--muted); border-bottom: 1px solid var(--border); font-weight: 600; }
+.post pre, pre.og {
+  margin: 0; padding: 12px; font-size: 12px; line-height: 1.5; white-space: pre-wrap;
+  word-break: break-word; color: var(--text); font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+pre.og { background: var(--panel-2); border: 1px solid var(--border); border-radius: 10px; overflow-x: auto; }
+.copy {
+  background: var(--brand); color: #06121f; border: 0; border-radius: 6px; font-size: 11px;
+  font-weight: 700; padding: 3px 10px; cursor: pointer;
+}
+.copy:hover { filter: brightness(1.1); }

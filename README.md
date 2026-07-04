@@ -54,6 +54,27 @@ Signals that need a paid third-party API (domain authority, backlink counts,
 exact SERP position) are reported as *“needs external API”* rather than
 fabricated.
 
+## Organic growth engine 🚀
+
+Every real-website audit also returns a **growth report** aimed at spreading the
+page organically. No tool can *force* virality — but shareability is measurable
+and every legitimate lever can be automated:
+
+![growth engine](docs/growth.png)
+
+- **Shareability / virality score** — headline strength, social-preview
+  readiness, readability and ease-of-sharing, each with concrete fixes
+- **Ready-to-post social content** — captions + hashtags for Facebook, X,
+  LinkedIn, Instagram and WhatsApp, generated from the page's own keywords
+- **Open Graph / Twitter Card tags** — copy-paste `<meta>` tags so shared links
+  render a rich preview (the single biggest driver of shares)
+- **Organic distribution playbook** — a prioritised checklist (native posting,
+  community answers, short-form video, email, backlinks)
+
+> **No black-hat, ever.** TrafficPilot never buys fake traffic, spams links or
+> automates bot engagement — those get sites penalised. It only prepares the
+> white-hat assets and tells you exactly where to post them.
+
 ---
 
 ## Machine learning at the core
@@ -106,6 +127,11 @@ trafficpilot/
 │   ├── geo.py             # geo/region readiness + local-SEO recs
 │   ├── indexing.py        # sitemap generation + IndexNow submission
 │   └── audit.py           # orchestrator -> SiteAudit
+├── growth/                # organic growth engine
+│   ├── virality.py        # shareability / virality scoring
+│   ├── social.py          # social captions, hashtags, OG/Twitter tags
+│   ├── distribution.py    # organic distribution playbook
+│   └── engine.py          # assembles the growth report
 ├── service.py             # assembles the full dashboard payload
 ├── train.py               # trains + saves every model
 └── web/                   # Flask dashboard (app + templates + static)
